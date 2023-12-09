@@ -46,7 +46,7 @@ When you enter the Endpoint URL, Vercel will ask you to verify that you own the 
 
 Local testing:
 
-1. Start the server `SECRET_KEY="TODO" functions-framework-python --target=on_log`
+1. Start the server `GCP_PROJECT="TODO" SECRET_KEY="TODO" functions-framework-python --target=on_log`
 2. Make a request `curl localhost:8080`
 
 Run tests:

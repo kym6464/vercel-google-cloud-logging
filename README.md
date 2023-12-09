@@ -20,6 +20,7 @@ gcloud functions deploy vercel-log-drain \
   --runtime=python312 \
   --region=us-east4 \
   --trigger-http \
+  --max-instances 10 \
   --concurrency=10 \
   --cpu=1 \
   --memory="256MB" \

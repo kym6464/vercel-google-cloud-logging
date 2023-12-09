@@ -26,7 +26,7 @@ gcloud functions deploy vercel-log-drain \
   --allow-unauthenticated \
   --env-vars-file=env-vars.yaml \
   --source=. \
-  --entry-point=on_verify
+  --entry-point=on_log
 ```
 
 Wait for command to complete and copy the Cloud Function URL.
@@ -39,22 +39,7 @@ Wait for command to complete and copy the Cloud Function URL.
 
 When you enter the Endpoint URL, Vercel will ask you to verify that you own the URL. Set VERCEL_VERIFICATION_KEY in `env-vars.yaml` and redeploy (step 3). Wait for the deployment to finish then click Verify in Vercel.
 
-(5) Deploy log ingestor to google cloud:
-
-```
-gcloud functions deploy vercel-log-drain \
-  --gen2 \
-  --runtime=python312 \
-  --region=us-east4 \
-  --trigger-http \
-  --concurrency=10 \
-  --cpu=1 \
-  --memory="256MB" \
-  --allow-unauthenticated \
-  --env-vars-file=env-vars.yaml \
-  --source=. \
-  --entry-point=on_log
-```
+(5) Redeploy (step 3)
 
 ## Development
 

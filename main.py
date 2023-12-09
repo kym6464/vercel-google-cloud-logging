@@ -38,40 +38,47 @@ def on_log(req):
     """
     if req.method != "POST":
         return {"message": f"Invalid method '{req.method}'"}, 405
-    if not req.is_json:
-        return {"message": "Expected application/json"}, 400
 
-    # Verify HMAC signature
+    # NOTE when verifying URL ownership, Vercel does not send the correct
+    # `content-type` header so we can't use `req.is_json`.
+    body_json = req.get_json(force=True, silent=True)
+    if body_json is None:
+        message = "Expected request body to be JSON"
+        log(
+            message=message,
+            request_body=req.get_data(as_text=True),
+            content_type=req.headers.get("content-type"),
+        )
+        return {"message": "Expected request body to be JSON"}, 400
+
+    # NOTE when verifying URL ownership, Vercel sends an empty body without the
+    # `x-vercel-signature` signature.
+    if body_json == {}:
+        VERCEL_VERIFICATION_KEY = os.environ.get("VERCEL_VERIFICATION_KEY")
+        if VERCEL_VERIFICATION_KEY in [None, "TODO"]:
+            log("VERCEL_VERIFICATION_KEY is not set", severity="ERROR")
+        return (
+            {"message": "Verifying URL ownership"},
+            200,
+            {"x-vercel-verify": VERCEL_VERIFICATION_KEY},
+        )
+
     # https://vercel.com/docs/rest-api#securing-your-log-drains
     received_signature = req.headers.get("x-vercel-signature")
     if not received_signature:
         return {"message": "Missing signature"}, 401
-    request_data = req.get_data(as_text=True)
+    body_text = req.get_data(as_text=True)
     expected_signature = hmac.new(
-        SECRET_KEY.encode(), request_data.encode(), hashlib.sha1
+        SECRET_KEY.encode(), body_text.encode(), hashlib.sha1
     ).hexdigest()
     if not hmac.compare_digest(received_signature, expected_signature):
         log(
             message="Invalid signature",
-            request_data=request_data,
+            request_body=body_text,
             received_signature=received_signature,
             severity="WARNING",
         )
         return {"message": "Invalid signature"}, 403
 
-    body = req.json
-    log({"message": "Request body", "body": body})
-
-    return ({"ok": True}, 200)
-
-
-@functions_framework.http
-def on_verify(req):
-    VERCEL_VERIFICATION_KEY = os.environ.get("VERCEL_VERIFICATION_KEY")
-    if not VERCEL_VERIFICATION_KEY:
-        raise Exception("Missing VERCEL_VERIFICATION_KEY")
-    return (
-        {"ok": True},
-        200,
-        {"x-vercel-verify": VERCEL_VERIFICATION_KEY},
-    )
+    log({"message": "Request body", "body": body_json})
+    return {"ok": True}

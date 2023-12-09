@@ -22,7 +22,7 @@ def transform(vercel_log: dict, *, inplace=False) -> dict:
     log_entry = vercel_log if inplace else copy.deepcopy(vercel_log)
     log_entry["severity"] = "INFO"
     log_entry["timestamp"] = parse_milliseconds(vercel_log["timestamp"])
-    proxy = vercel_log["proxy"]
+    proxy = vercel_log.get("proxy", {})
 
     user_agent: str | None = None
     user_agents = proxy.get("userAgent")
@@ -42,5 +42,5 @@ def transform(vercel_log: dict, *, inplace=False) -> dict:
         "referer": proxy.get("referer"),
         "cacheHit": is_cache_hit,
     }
-    
+
     return log_entry

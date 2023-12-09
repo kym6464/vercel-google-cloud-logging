@@ -5,6 +5,8 @@ import hashlib
 
 import functions_framework
 
+from transform import transform
+
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
@@ -80,5 +82,13 @@ def on_log(req):
         )
         return {"message": "Invalid signature"}, 403
 
-    log({"message": "Request body", "body": body_json})
+    if not isinstance(body_json, list):
+        message = "Expected request body to be an object array"
+        log(message, severity="ERROR")
+        return {"message": message}, 400
+
+    for vercel_log in body_json:
+        log_entry = transform(vercel_log)
+        print(json.dumps(log_entry))
+
     return {"ok": True}

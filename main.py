@@ -88,7 +88,7 @@ def on_log(req):
         return {"message": message}, 400
 
     for vercel_log in body_json:
-        log_entry = transform(vercel_log)
+        log_entry = transform(vercel_log, inplace=True)
         print(json.dumps(log_entry))
 
     return {"ok": True}

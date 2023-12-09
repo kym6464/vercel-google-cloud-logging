@@ -1,6 +1,6 @@
 # vercel-google-cloud-logging
 
-A publicly accessible HTTP endpoint, deployed to Google Cloud Functions, to serve as a Vercel [log drain](https://vercel.com/docs/observability/log-drains-overview) to ingest logs into Google Cloud Logging. At the moment, this simply dumps the log record to Cloud Logging without attempting to convert the Vercel log to their Cloud Logging counterparts.
+A publicly accessible HTTP endpoint, deployed to Google Cloud Functions, to serve as a Vercel [log drain](https://vercel.com/docs/observability/log-drains-overview) to ingest logs into Google Cloud Logging. This only converts some fields from the Vercel log to their Cloud Logging counterparts.
 
 ## Setup
 
@@ -47,6 +47,12 @@ Local testing:
 
 1. Start the server `SECRET_KEY="TODO" functions-framework-python --target=on_log`
 2. Make a request `curl localhost:8080`
+
+Run tests:
+
+```
+python -m tests.test_transform
+```
 
 Useful documentation:
 

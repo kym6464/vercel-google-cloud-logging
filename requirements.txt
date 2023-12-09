@@ -1,2 +1,1 @@
 functions-framework==3.*
-envyaml==1.*

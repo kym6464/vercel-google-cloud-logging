@@ -33,7 +33,7 @@ vercel_log = {
 expected_log_entry = {
     "id": "1669118385998052846361484418",
     "message": "SAMPLE MESSAGE: START RequestId: xxxxxxxxxxxxxxxxx Version: $LATEST\nEND RequestId: xxxxxxxxxxxxxxxxx\nREPORT RequestId: xxxxxxxxxxxxxxxxx\tDuration: 1472.20 ms\tBilled Duration: 1473 ms\tMemory Size: 1024 MB\tMax Memory Used: 147 MB\t\n",
-    "timestamp": "2023-12-09T13:42:41.444000+00:00",
+    "timestamp": {"seconds": 1702129361, "nanos": 444000000},
     "requestId": "cdg1::iad1::xxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxx",
     "statusCode": 200,
     "proxy": {

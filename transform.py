@@ -1,7 +1,6 @@
 import copy
 
 from functools import reduce
-from datetime import datetime, timezone
 
 
 def get(dictionary: dict, path: str, default=None):
@@ -12,17 +11,18 @@ def get(dictionary: dict, path: str, default=None):
     )
 
 
-def parse_milliseconds(milliseconds: int) -> str:
-    seconds = milliseconds / 1000.0
-    dt = datetime.fromtimestamp(seconds, timezone.utc)
-    return dt.isoformat()
+def to_timestamp(milliseconds: int):
+    "https://cloud.google.com/logging/docs/agent/logging/configuration#timestamp-processing"
+    return {"seconds": milliseconds // 1000, "nanos": (milliseconds % 1000) * 1000000}
 
 
 def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
     log_entry = vercel_log if inplace else copy.deepcopy(vercel_log)
-    log_entry["logging.googleapis.com/trace"] = f"projects/{project}/traces/{vercel_log["requestId"]}"
+    log_entry[
+        "logging.googleapis.com/trace"
+    ] = f"projects/{project}/traces/{vercel_log['requestId']}"
     log_entry["severity"] = "INFO"
-    log_entry["timestamp"] = parse_milliseconds(vercel_log["timestamp"])
+    log_entry["timestamp"] = to_timestamp(vercel_log["timestamp"])
     proxy = vercel_log.get("proxy", {})
 
     user_agent: str | None = None
@@ -36,7 +36,7 @@ def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
 
     log_entry["http_request"] = {
         "requestMethod": proxy.get("method"),
-        "requestUrl": f"{proxy.get("scheme")}://{proxy.get("host")}/{proxy.get("path")}",
+        "requestUrl": f"{proxy.get('scheme')}://{proxy.get('host')}/{proxy.get('path')}",
         "status": vercel_log.get("statusCode"),
         "userAgent": user_agent,
         "remoteIp": proxy.get("clientIp"),

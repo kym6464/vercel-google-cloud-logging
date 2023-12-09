@@ -10,7 +10,7 @@ A publicly accessible HTTP endpoint, deployed to Google Cloud Functions, to serv
 python -c 'import secrets; print(secrets.token_hex(16))'
 ```
 
-(2) Create file `env-vars.yaml` based on [env-vars.yaml.example](./env-vars.yaml.example) and set SECRET_KEY. You don't need to set VERCEL_VERIFICATION_KEY yet.
+(2) Create file `env-vars.yaml` based on [env-vars.yaml.example](./env-vars.yaml.example) and set all variables except VERCEL_VERIFICATION_KEY.
 
 (3) Deploy url verifier to google cloud:
 

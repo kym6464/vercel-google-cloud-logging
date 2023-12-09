@@ -18,8 +18,9 @@ def parse_milliseconds(milliseconds: int) -> str:
     return dt.isoformat()
 
 
-def transform(vercel_log: dict, *, inplace=False) -> dict:
+def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
     log_entry = vercel_log if inplace else copy.deepcopy(vercel_log)
+    log_entry["logging.googleapis.com/trace"] = f"projects/{project}/traces/{vercel_log["requestId"]}"
     log_entry["severity"] = "INFO"
     log_entry["timestamp"] = parse_milliseconds(vercel_log["timestamp"])
     proxy = vercel_log.get("proxy", {})

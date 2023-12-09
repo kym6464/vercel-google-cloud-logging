@@ -1,5 +1,7 @@
 from transform import transform
 
+project = "test-project"
+
 vercel_log = {
     "id": "1669118385998052846361484418",
     "message": "SAMPLE MESSAGE: START RequestId: xxxxxxxxxxxxxxxxx Version: $LATEST\nEND RequestId: xxxxxxxxxxxxxxxxx\nREPORT RequestId: xxxxxxxxxxxxxxxxx\tDuration: 1472.20 ms\tBilled Duration: 1473 ms\tMemory Size: 1024 MB\tMax Memory Used: 147 MB\t\n",
@@ -64,8 +66,9 @@ expected_log_entry = {
         "referer": "https://my-app.vercel.app",
         "cacheHit": False,
     },
+    "logging.googleapis.com/trace": f"projects/{project}/traces/cdg1::iad1::xxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxx",
 }
 
-log_entry = transform(vercel_log)
+log_entry = transform(vercel_log, project=project)
 assert log_entry == expected_log_entry
 print("succeess")

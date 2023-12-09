@@ -7,6 +7,9 @@ import functions_framework
 
 from transform import transform
 
+GCP_PROJECT = os.environ.get("GCP_PROJECT")
+if not GCP_PROJECT:
+    raise Exception("GCP_PROJECT is not set")
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
@@ -88,7 +91,7 @@ def on_log(req):
         return {"message": message}, 400
 
     for vercel_log in body_json:
-        log_entry = transform(vercel_log, inplace=True)
+        log_entry = transform(vercel_log, project=GCP_PROJECT, inplace=True)
         print(json.dumps(log_entry))
 
     return {"ok": True}

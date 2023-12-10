@@ -12,7 +12,7 @@ python -c 'import secrets; print(secrets.token_hex(16))'
 
 (2) Create file `env-vars.yaml` based on [env-vars.yaml.example](./env-vars.yaml.example) and set all variables except VERCEL_VERIFICATION_KEY.
 
-(3) Deploy url verifier to google cloud:
+(3) Deploy to google cloud so that you can obtain the public URL:
 
 ```
 gcloud functions deploy vercel-log-drain \
@@ -30,7 +30,7 @@ gcloud functions deploy vercel-log-drain \
   --entry-point=on_log
 ```
 
-Wait for command to complete and copy the Cloud Function URL.
+... wait for command to complete and copy the Cloud Function URL.
 
 (4) Create a log drain in Vercel with the following options:
 

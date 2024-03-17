@@ -57,7 +57,7 @@ expected_log_entry = {
     "host": "my-app.vercel.app",
     "path": "api/hello",
     "severity": "INFO",
-    "http_request": {
+    "httpRequest": {
         "requestMethod": "GET",
         "requestUrl": "https://my-app.vercel.app//api/hello",
         "status": 200,

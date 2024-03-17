@@ -34,7 +34,7 @@ def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
     if proxy.get("vercelCache") is True:
         is_cache_hit = True
 
-    log_entry["http_request"] = {
+    log_entry["httpRequest"] = {
         "requestMethod": proxy.get("method"),
         "requestUrl": f"{proxy.get('scheme')}://{proxy.get('host')}/{proxy.get('path')}",
         "status": vercel_log.get("statusCode"),

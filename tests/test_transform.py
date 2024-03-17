@@ -71,4 +71,4 @@ expected_log_entry = {
 
 log_entry = transform(vercel_log, project=project)
 assert log_entry == expected_log_entry
-print("succeess")
+print("success")

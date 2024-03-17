@@ -59,7 +59,7 @@ expected_log_entry = {
     "severity": "INFO",
     "httpRequest": {
         "requestMethod": "GET",
-        "requestUrl": "https://my-app.vercel.app//api/hello",
+        "requestUrl": "https://my-app.vercel.app/api/hello",
         "status": 200,
         "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
         "remoteIp": "xx.xx.xx.xx",

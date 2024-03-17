@@ -18,9 +18,9 @@ def to_timestamp(milliseconds: int):
 
 def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
     log_entry = vercel_log if inplace else copy.deepcopy(vercel_log)
-    log_entry[
-        "logging.googleapis.com/trace"
-    ] = f"projects/{project}/traces/{vercel_log['requestId']}"
+    log_entry["logging.googleapis.com/trace"] = (
+        f"projects/{project}/traces/{vercel_log['requestId']}"
+    )
     log_entry["severity"] = "INFO"
     log_entry["timestamp"] = to_timestamp(vercel_log["timestamp"])
     proxy = vercel_log.get("proxy", {})
@@ -36,7 +36,7 @@ def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
 
     log_entry["httpRequest"] = {
         "requestMethod": proxy.get("method"),
-        "requestUrl": f"{proxy.get('scheme')}://{proxy.get('host')}/{proxy.get('path')}",
+        "requestUrl": f"{proxy.get('scheme')}://{proxy.get('host')}{proxy.get('path')}",
         "status": vercel_log.get("statusCode"),
         "userAgent": user_agent,
         "remoteIp": proxy.get("clientIp"),

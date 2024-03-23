@@ -1,5 +1,5 @@
 import copy
-
+import json
 from functools import reduce
 
 
@@ -16,12 +16,26 @@ def to_timestamp(milliseconds: int):
     return {"seconds": milliseconds // 1000, "nanos": (milliseconds % 1000) * 1000000}
 
 
+def to_severity(level: str):
+    "https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity"
+    if level == "error":
+        return "ERROR"
+    if level == "warning":
+        return "WARNING"
+    if level == "info":
+        return "INFO"
+
+    message = f"Unrecognized level '{level}' received from Vercel"
+    print(json.dumps({"message": message, "severity": "WARNING"}))
+    return "INFO"
+
+
 def transform(vercel_log: dict, *, project: str, inplace=False) -> dict:
     log_entry = vercel_log if inplace else copy.deepcopy(vercel_log)
     log_entry["logging.googleapis.com/trace"] = (
         f"projects/{project}/traces/{vercel_log['requestId']}"
     )
-    log_entry["severity"] = "INFO"
+    log_entry["severity"] = to_severity(log_entry.pop("level", None))
     log_entry["timestamp"] = to_timestamp(vercel_log["timestamp"])
     proxy = vercel_log.get("proxy", {})
 

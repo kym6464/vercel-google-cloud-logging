@@ -1,3 +1,5 @@
+import json
+import sys
 from transform import transform
 
 project = "test-project"
@@ -8,6 +10,7 @@ vercel_log = {
     "timestamp": 1702129361444,
     "requestId": "cdg1::iad1::xxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxx",
     "statusCode": 200,
+    "level": "warning",
     "proxy": {
         "timestamp": 1702129361444,
         "region": "cdg1",
@@ -56,7 +59,7 @@ expected_log_entry = {
     "source": "lambda",
     "host": "my-app.vercel.app",
     "path": "api/hello",
-    "severity": "INFO",
+    "severity": "WARNING",
     "httpRequest": {
         "requestMethod": "GET",
         "requestUrl": "https://my-app.vercel.app/api/hello",
@@ -70,5 +73,15 @@ expected_log_entry = {
 }
 
 log_entry = transform(vercel_log, project=project)
-assert log_entry == expected_log_entry
+
+if log_entry != expected_log_entry:
+    error = {
+        "status": "error",
+        "input": vercel_log,
+        "expected": expected_log_entry,
+        "actual": log_entry,
+    }
+    print(json.dumps(error, indent=4))
+    sys.exit(1)
+
 print("success")

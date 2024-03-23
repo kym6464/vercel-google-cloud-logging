@@ -60,3 +60,4 @@ Useful documentation:
 - Local testing https://cloud.google.com/functions/docs/create-deploy-http-python#build_and_test_your_function_locally
 - Cloud Functions Python runtime https://cloud.google.com/functions/docs/concepts/python-runtime
 - Vercel log drain auth https://vercel.com/docs/rest-api#securing-your-log-drains
+- Cloud Logging LogEntry https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
